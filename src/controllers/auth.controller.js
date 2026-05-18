@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken";
 export async function registerUser(req, res) {
 
     const { name, email, password, role } = req.body;
+    const proPic = req.file.path; 
+    console.log(req.file);
+    
 
     const isAlreayExist = await userModel.findOne({ email });
 
@@ -17,7 +20,8 @@ export async function registerUser(req, res) {
         name,
         email,
         password,
-        role
+        role,
+        proPic
     });
 
     const token = jwt.sign({
@@ -43,7 +47,7 @@ export async function loginUser(req, res) {
 
     if (!user) {
         res.status(404).json({
-            message: "User Not Found With Email Or Role"
+            message: "User Not Found With This Email Or Role"
         })
     }
 
@@ -64,6 +68,25 @@ export async function loginUser(req, res) {
 
     res.status(201).json({
         message: "User Login Successfully"
+    });
+}
+
+export async function forgotPassword(req, res) {
+    const { email , password } = req.body;
+
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+        res.status(404).json({
+            message: "User Not Found With This Email"
+        })
+    }
+
+    user.password = password;
+    user.save();
+
+    res.status(201).json({
+        message: "Password Reset Successfully"
     });
 }
 

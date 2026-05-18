@@ -22,14 +22,18 @@ const userSchema = new mongoose.Schema({
             values: ["admin", "customer"],
             message: "Status Only can be admin or customer"
         }
+    },
+    proPic: {
+        type: String,
+        default: ""
     }
 }, {
     timestamps: true
 });
 
-userSchema.pre('save', async function() {
+userSchema.pre('save', async function () {
 
-    if(!this.isModified('password')) {
+    if (!this.isModified('password')) {
         return;
     }
     this.password = await bcrypt.hash(this.password, 10)
