@@ -67,7 +67,8 @@ export async function loginUser(req, res) {
     res.cookie("JWT_TOKEN", token);
 
     res.status(201).json({
-        message: "User Login Successfully"
+        message: "User Login Successfully",
+        user
     });
 }
 
