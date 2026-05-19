@@ -27,6 +27,7 @@ export async function registerUser(req, res) {
     const token = jwt.sign({
         id: user._id,
         email: user.email,
+        role: user.role
     }, process.env.JWT_SECERT, { expiresIn: '1d' });
 
     res.cookie('JWT_TKOEN', token);
@@ -61,7 +62,8 @@ export async function loginUser(req, res) {
 
     const token = jwt.sign({
         id: user._id,
-        email: user.email
+        email: user.email,
+        role: user.role
     }, process.env.JWT_SECERT, { expiresIn: "1d" });
 
     res.cookie("JWT_TOKEN", token);

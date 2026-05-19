@@ -14,4 +14,7 @@ app.use(cors({
 import authRouter from './routes/auth.routes.js';
 app.use('/api/auth', authRouter);
 
+import roomRouter from './routes/room.routes.js';
+app.use('/api/room', roomRouter);
+
 export default app;
