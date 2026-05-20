@@ -1,44 +1,44 @@
-import userModel from "../model/user.model.js";
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
+import userModel from "../model/userModel.js";
 
-export async function registerUser(req, res) {
+export async function register(req, res) {
 
-    const { name, email, password, role } = req.body;
-    const proPic = req.file.path; 
-    console.log(req.file);
-    
+    const { name, email, password, role, phone } = req.body;
+    const proPic = req.file;
 
     const isAlreayExist = await userModel.findOne({ email });
 
     if (isAlreayExist) {
-        res.status(400).json({
+        res.status(401).json({
             message: "User alreay exist with this email and password"
         })
     }
 
     const user = await userModel.create({
-        name,
-        email,
-        password,
-        role,
-        proPic
+        name, 
+        email, 
+        password, 
+        role, 
+        phone,
+        ProfilePic: proPic?.path
     });
 
     const token = jwt.sign({
-        id: user._id,
+        userID: user._id,
         email: user.email,
         role: user.role
-    }, process.env.JWT_SECERT, { expiresIn: '1d' });
+    }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     res.cookie('JWT_TKOEN', token);
 
-    res.status(400).json({
+    res.status(201).json({
         message: "User Register Successfully",
         user
     });
 }
 
 export async function loginUser(req, res) {
+
     const { email, password, role } = req.body;
 
     const user = await userModel.findOne({ 
@@ -61,10 +61,10 @@ export async function loginUser(req, res) {
     }
 
     const token = jwt.sign({
-        id: user._id,
+        userID: user._id,
         email: user.email,
         role: user.role
-    }, process.env.JWT_SECERT, { expiresIn: "1d" });
+    }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
     res.cookie("JWT_TOKEN", token);
 
@@ -100,3 +100,21 @@ export async function logoutUser(req, res) {
         message: "User Logout Successfully "
     });
 } 
+
+export async function getUser(req, res) {
+
+    const { userID } = req.user;
+
+    const user = await userModel.findById(userID);
+
+    if (!user) {
+        return res.status(401).json({
+            message: "User not Found"
+        })
+    }
+
+    return res.status(200).json({
+        message: "User Fetched Successfullt",
+        user
+    });
+}

@@ -19,7 +19,10 @@ export const addRoomValidator = [
     body('roomType')
         .notEmpty().withMessage('Room Type is required'),
 
-    body('member')
+    body('capacity')
+        .notEmpty().withMessage('Room Type is required'),
+        
+    body('status')
         .notEmpty().withMessage('Room Type is required'),
 
     validate

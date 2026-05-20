@@ -11,7 +11,7 @@ const identifyUser = (req, res, next) => {
     let decoded = null;
 
     try {
-        decoded = jwt.verify(token, process.env.JWT_SECERT);
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     } catch (error) {
         return res.status(401).json({

@@ -4,12 +4,12 @@ import bcrypt from 'bcryptjs'
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Name is required"]
+        required: [true, "Name is required"]   
     },
     email: {
         type: String,
         required: [true, "Email is required"],
-        unique: [true, "Email is already exist"]
+        unique: [true, "Email must br unique"]
     },
     password: {
         type: String,
@@ -19,15 +19,23 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Role is required"],
         enum: {
-            values: ["admin", "customer"],
-            message: "Status Only can be admin or customer"
-        }
+            values: ["ADMIN", "CUSTOMER"],
+            message: "Role can only contain ADMIN or CUSTOMER"
+        },
+        default: "CUSTOMER"
     },
-    proPic: {
-        type: String,
-        default: ""
+    phone: {
+        type: Number,
+    },
+    ProfilePic: {
+        type: String
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
-}, {
+},
+{
     timestamps: true
 });
 
@@ -40,8 +48,8 @@ userSchema.pre('save', async function () {
 });
 
 userSchema.methods.comparePassword = function (candidatePassword) {
-    return bcrypt.compare(candidatePassword, this.password);
-};
+    return bcrypt.compare(candidatePassword, this.password)
+}
 
-const userModel = mongoose.model("Users", userSchema);
+const userModel = mongoose.model("USERS", userSchema);
 export default userModel;
