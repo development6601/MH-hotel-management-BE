@@ -5,10 +5,10 @@ import { addRoomValidator } from "../validators/roomValidator.js";
 
 const roomRouter = Router();
 
-roomRouter.post('/addRoom', identifyUser, addRoomValidator, addRooms);
+roomRouter.post('/admin/addRoom', identifyUser, addRoomValidator, addRooms);
 
-roomRouter.get('/updateRoomStatus/:roomId', identifyUser, updateRoomStatus);
+roomRouter.get('/admin/updateRoomStatus/:roomId', identifyUser, updateRoomStatus);
 
-roomRouter.get('/deleteRoom/:roomId', identifyUser, deleteRooms);
+roomRouter.get('/admin/deleteRoom/:roomId', identifyUser, deleteRooms);
 
 export default roomRouter;

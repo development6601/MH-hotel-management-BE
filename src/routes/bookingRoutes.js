@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { approveBooking, availableRoomsForCustomers, bookRoom, checkInGuest, checkOutGuest, getPendingBookings, mybookings, rejectBooking, todayCheckins, todayCheckouts } from "../controllers/bookingController.js";
+import { approveBooking, availableRoomsForCustomers, bookRoom, cancelBooking, checkInGuest, checkOutGuest, getPendingBookings, mybookings, rejectBooking, todayCheckins, todayCheckouts } from "../controllers/bookingController.js";
 import identifyUser from "../middlewares/authMiddleware.js";
 
 const bookingRouter = Router();
@@ -10,6 +10,7 @@ bookingRouter.post("/customer/book/:roomId", identifyUser, bookRoom);
 
 bookingRouter.get("/customer/mybookings", identifyUser, mybookings);
 
+bookingRouter.get("/customer/cancelBooking/:bookingId", identifyUser, cancelBooking);
 
 
 
@@ -20,6 +21,8 @@ bookingRouter.get("/admin/bookings/approve/:bookingId", identifyUser, approveBoo
 bookingRouter.get("/admin/bookings/reject/:bookingId", identifyUser, rejectBooking);
 
 bookingRouter.get("/admin/bookings/check-in/:bookingId", identifyUser, checkInGuest);
+
+bookingRouter.get("/admin/cancelBooking/:bookingId", identifyUser, cancelBooking);
 
 bookingRouter.get("/admin/bookings/check-out/:bookingId", identifyUser, checkOutGuest);
 

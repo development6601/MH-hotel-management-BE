@@ -156,6 +156,28 @@ export const mybookings = async (req, res) => {
     })
 }
 
+export const cancelBooking = async (req, res) => {
+
+    const { userID, role } = req.user;
+    const bookingId = req.params.bookingId;
+
+    const booking = await bookingModel.findById(bookingId);
+
+    if (!booking) {
+        return res.status(401).json({
+            message: "Booking not found"
+        })
+    }
+
+    booking.status = "CANCELLED";
+    booking.save();
+
+    return res.status(200).json({
+        message: "Your Bookings Fetch Successfully",
+        booking
+    })
+}
+
 export const getPendingBookings = async (req, res) => {
 
     const { userID, role } = req.user;
