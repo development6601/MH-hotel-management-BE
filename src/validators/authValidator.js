@@ -44,9 +44,6 @@ export const loginValidator = [
         .notEmpty().withMessage('Password is required')
         .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
 
-    body('role')
-        .notEmpty().withMessage('Role is required'),
-
     validate
 ]
 

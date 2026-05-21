@@ -5,7 +5,7 @@ export async function register(req, res) {
 
     const { name, email, password, role, phone } = req.body;
     const proPic = req.file;
-
+    
     const isAlreayExist = await userModel.findOne({ email });
 
     if (isAlreayExist) {
@@ -39,11 +39,10 @@ export async function register(req, res) {
 
 export async function loginUser(req, res) {
 
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
     const user = await userModel.findOne({ 
         email: email,
-        role: role
     });
 
     if (!user) {
