@@ -5,7 +5,7 @@ import fs from 'fs';
 
 export async function register(req, res) {
 
-    const { name, email, password, role, phone } = req.body;
+    const { name, email, password, role, gender, address, phone } = req.body;
     const proPic = req.file;
 
     const isAlreayExist = await userModel.findOne({ email });
@@ -21,6 +21,8 @@ export async function register(req, res) {
         email,
         password,
         role,
+        gender,
+        address,
         phone,
     });
 
