@@ -1,11 +1,13 @@
 import jwt from 'jsonwebtoken'
 import userModel from "../model/userModel.js";
+import path from 'path';
+import fs from 'fs';
 
 export async function register(req, res) {
 
     const { name, email, password, role, phone } = req.body;
     const proPic = req.file;
-    
+
     const isAlreayExist = await userModel.findOne({ email });
 
     if (isAlreayExist) {
@@ -15,13 +17,33 @@ export async function register(req, res) {
     }
 
     const user = await userModel.create({
-        name, 
-        email, 
-        password, 
-        role, 
+        name,
+        email,
+        password,
+        role,
         phone,
-        ProfilePic: proPic?.path
     });
+
+    const profilePicFolder = path.join(
+        process.cwd(),
+        "src",
+        "assets",
+        "PROFILE_PIC_IMAGES"
+    );
+
+    if (!fs.existsSync(profilePicFolder)) {
+        fs.mkdirSync(profilePicFolder, {
+            recursive: true
+        });
+    }
+
+    const newPath = `${profilePicFolder}/${user._id.toString()}` + path.extname(proPic.originalname);
+
+    fs.renameSync(proPic.path, newPath);
+    
+    user.ProfilePic = `./PROFILE_PIC_IMAGES/${user._id.toString()}` + path.extname(proPic.originalname);
+    // user.ProfilePic = newPath;
+    await user.save();
 
     const token = jwt.sign({
         userID: user._id,
@@ -41,7 +63,7 @@ export async function loginUser(req, res) {
 
     const { email, password } = req.body;
 
-    const user = await userModel.findOne({ 
+    const user = await userModel.findOne({
         email: email,
     });
 
@@ -53,7 +75,7 @@ export async function loginUser(req, res) {
 
     const isPasswordMatched = await user.comparePassword(password);
 
-    if(!isPasswordMatched) {
+    if (!isPasswordMatched) {
         res.status(400).json({
             message: "Invalid Credentials"
         })
@@ -74,7 +96,7 @@ export async function loginUser(req, res) {
 }
 
 export async function forgotPassword(req, res) {
-    const { email , password } = req.body;
+    const { email, password } = req.body;
 
     const user = await userModel.findOne({ email });
 
@@ -98,7 +120,7 @@ export async function logoutUser(req, res) {
     res.status(201).json({
         message: "User Logout Successfully "
     });
-} 
+}
 
 export async function getUser(req, res) {
 
