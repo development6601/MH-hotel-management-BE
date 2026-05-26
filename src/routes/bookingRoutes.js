@@ -10,7 +10,7 @@ bookingRouter.post("/customer/book/:roomId", identifyUser, bookRoom);
 
 bookingRouter.get("/customer/mybookings", identifyUser, mybookings);
 
-bookingRouter.get("/customer/cancelBooking/:bookingId", identifyUser, cancelBooking);
+bookingRouter.patch("/customer/cancelBooking/:bookingId", identifyUser, cancelBooking);
 
 
 

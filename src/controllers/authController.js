@@ -11,8 +11,8 @@ export async function register(req, res) {
     const isAlreayExist = await userModel.findOne({ email });
 
     if (isAlreayExist) {
-        res.status(401).json({
-            message: "User alreay exist with this email and password"
+        return res.status(401).json({
+            message: "User already exists with this email"
         })
     }
 
@@ -39,13 +39,16 @@ export async function register(req, res) {
         });
     }
 
-    const newPath = `${profilePicFolder}/${user._id.toString()}` + path.extname(proPic.originalname);
+    if (proPic) {
 
-    fs.renameSync(proPic.path, newPath);
-    
-    user.ProfilePic = `./PROFILE_PIC_IMAGES/${user._id.toString()}` + path.extname(proPic.originalname);
-    // user.ProfilePic = newPath;
-    await user.save();
+        const newPath = `${profilePicFolder}/${user._id.toString()}${path.extname(proPic.originalname)}`;
+
+        fs.renameSync(proPic.path, newPath);
+
+        user.ProfilePic = `/PROFILE_PIC_IMAGES/${user._id.toString()}${path.extname(proPic.originalname)}`;
+
+        await user.save();
+    }
 
     const token = jwt.sign({
         userID: user._id,
@@ -53,7 +56,7 @@ export async function register(req, res) {
         role: user.role
     }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    res.cookie('JWT_TKOEN', token);
+    res.cookie('JWT_TOKEN', token);
 
     res.status(201).json({
         message: "User Register Successfully",
